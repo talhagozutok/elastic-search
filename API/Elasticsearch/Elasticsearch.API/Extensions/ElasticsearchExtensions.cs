@@ -15,6 +15,7 @@ public static class ElasticsearchExtensions
         var settings = new ConnectionSettings(pool);
         var client = new ElasticClient(settings);
 
+        // For ElasticClient recommended lifetime is singleton
         services.AddSingleton(typeof(ElasticClient), client);
     }
 }
