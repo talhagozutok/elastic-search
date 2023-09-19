@@ -20,6 +20,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapGet("/", () => "Hello world!");
+app.UseRouting();
+app.MapAllEndpoints();
 
 app.Run();
