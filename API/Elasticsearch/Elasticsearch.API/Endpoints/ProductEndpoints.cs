@@ -1,4 +1,7 @@
-﻿namespace Elasticsearch.API.Endpoints;
+﻿using Elasticsearch.API.Requests;
+using Elasticsearch.API.Services;
+
+namespace Elasticsearch.API.Endpoints;
 
 public static class ProductEndpoints
 {
@@ -7,8 +10,13 @@ public static class ProductEndpoints
     {
         var productRouteGroup = app
             .MapGroup("/api/products")
-            .WithName("ProductEndpoints");
+            .WithName(nameof(ProductEndpoints));
 
-        productRouteGroup.MapGet("/", () => "Hello world!");
+        productRouteGroup.MapPost("/", SaveAsync);
     }
+
+    private static async Task<IResult> SaveAsync(
+        ProductCreateDto request,
+        ProductService productService)
+        => Results.Ok(await productService.SaveAsync(request));
 }
