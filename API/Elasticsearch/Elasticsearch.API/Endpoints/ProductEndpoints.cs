@@ -73,6 +73,11 @@ public static class ProductEndpoints
             return Results.StatusCode((int)HttpStatusCode.InternalServerError);
         }
 
+        if (response.StatusCode is HttpStatusCode.NotFound)
+        {
+            return Results.NotFound(response);
+        }
+
         return Results.NoContent();
     }
 }

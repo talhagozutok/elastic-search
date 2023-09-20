@@ -75,12 +75,12 @@ public class ProductRepository
         return response.IsValid;
     }
 
-    public async Task<bool> DeleteAsync(string id)
+    public async Task<DeleteResponse> DeleteAsync(string id)
     {
         var response = await _elasticClient.DeleteAsync<Product>(
             id,
             s => s.Index(ProductIndexName));
 
-        return response.IsValid;
+        return response;
     }
 }
