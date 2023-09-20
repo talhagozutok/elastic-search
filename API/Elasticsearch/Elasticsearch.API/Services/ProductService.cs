@@ -27,8 +27,10 @@ public class ProductService
                 HttpStatusCode.InternalServerError);
         }
 
+        var productDto = responseProduct.ToDto();
+
         return ResponseDto<ProductDto>.Success(
-            responseProduct.ToDto(),
+            productDto,
             HttpStatusCode.Created);
     }
 
@@ -64,7 +66,7 @@ public class ProductService
         var productDto = hasProduct.ToDto();
 
         return ResponseDto<ProductDto>.Success(
-            hasProduct.ToDto(),
+            productDto,
             HttpStatusCode.OK);
     }
 
