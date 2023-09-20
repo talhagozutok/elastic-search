@@ -29,7 +29,7 @@ public class Product
         var productFeature = new ProductFeatureDto(
             Feature.Width,
             Feature.Height,
-            Feature.Color);
+            Feature.Color?.ToString("g"));
 
         return new ProductDto(
             Id, Name,

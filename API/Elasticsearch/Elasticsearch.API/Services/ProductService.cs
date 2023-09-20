@@ -46,7 +46,7 @@ public class ProductService
                 new ProductFeatureDto(
                     x.Feature?.Width,
                     x.Feature?.Height,
-                    x.Feature?.Color)))
+                    x.Feature?.Color?.ToString("g"))))
             .ToImmutableList();
     }
 }

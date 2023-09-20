@@ -10,6 +10,8 @@ public record ProductCreateDto(
 {
     public Product ToProduct()
     {
+        Color? enumColor = Enum.TryParse<Color>(ProductFeature.Color, out var color) ? color : null;
+
         return new Product
         {
             Name = Name,
@@ -19,7 +21,7 @@ public record ProductCreateDto(
             {
                 Width = ProductFeature.Width,
                 Height = ProductFeature.Height,
-                Color = ProductFeature.Color
+                Color = enumColor
             }
         };
     }
