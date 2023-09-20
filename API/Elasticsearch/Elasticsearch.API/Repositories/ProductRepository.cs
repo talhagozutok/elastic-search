@@ -16,9 +16,11 @@ public class ProductRepository
     {
         product.CreatedAt = DateTime.Now;
 
+        var newGuid = Guid.NewGuid();
         var response = await _elasticClient.IndexAsync(
             product,
-            x => x.Index("products"));
+            x => x.Index("products")
+                  .Id(newGuid.ToString()));
 
         if (!response.IsValid)
         {
