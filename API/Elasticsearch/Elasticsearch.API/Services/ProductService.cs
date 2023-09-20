@@ -49,4 +49,22 @@ public class ProductService
                     x.Feature?.Color?.ToString("g"))))
             .ToImmutableList();
     }
+
+    public async Task<ResponseDto<ProductDto>> GetByIdAsync(string id)
+    {
+        var hasProduct = await _productRepository.GetByIdAsync(id);
+
+        if (hasProduct is null)
+        {
+            return ResponseDto<ProductDto>.Fail(
+                "Product not found.",
+                HttpStatusCode.NotFound);
+        }
+
+        var productDto = hasProduct.ToDto();
+
+        return ResponseDto<ProductDto>.Success(
+            hasProduct.ToDto(),
+            HttpStatusCode.OK);
+    }
 }

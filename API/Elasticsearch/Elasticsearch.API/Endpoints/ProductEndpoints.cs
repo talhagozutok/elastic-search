@@ -1,4 +1,5 @@
-﻿using Elasticsearch.API.Requests;
+﻿using System.Net;
+using Elasticsearch.API.Requests;
 using Elasticsearch.API.Services;
 
 namespace Elasticsearch.API.Endpoints;
@@ -13,6 +14,7 @@ public static class ProductEndpoints
 
         productRouteGroup.MapPost("/", SaveAsync);
         productRouteGroup.MapGet("/", GetAllAsync);
+        productRouteGroup.MapGet("/{id}", GetByIdAsync);
     }
 
     private static async Task<IResult> SaveAsync(
@@ -23,4 +25,23 @@ public static class ProductEndpoints
     private static async Task<IResult> GetAllAsync(
         ProductService productService)
         => Results.Ok(await productService.GetAllAsync());
+
+    private static async Task<IResult> GetByIdAsync(
+        string id,
+        ProductService productService)
+    {
+        if (id is null)
+        {
+            return Results.NotFound();
+        }
+
+        var productResponse = await productService.GetByIdAsync(id);
+
+        if (productResponse.StatusCode is HttpStatusCode.NotFound)
+        {
+            return Results.NotFound();
+        }
+
+        return Results.Ok(productResponse);
+    }
 }

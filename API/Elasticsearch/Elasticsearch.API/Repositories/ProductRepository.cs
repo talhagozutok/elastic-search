@@ -47,4 +47,20 @@ public class ProductRepository
 
         return result.Documents.ToImmutableList();
     }
+
+    public async Task<Product?> GetByIdAsync(string id)
+    {
+        var response = await _elasticClient.GetAsync<Product>(
+            id,
+            (desc => desc.Index(ProductIndexName)));
+
+        if (!response.IsValid)
+        {
+            return null;
+        }
+
+        response.Source.Id = response.Id;
+
+        return response.Source;
+    }
 }

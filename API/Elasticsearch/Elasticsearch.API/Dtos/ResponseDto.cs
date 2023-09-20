@@ -28,4 +28,12 @@ public record ResponseDto<T>
             StatusCode = statusCode,
         };
     }
+    public static ResponseDto<T> Fail(string error, HttpStatusCode statusCode)
+    {
+        return new ResponseDto<T>
+        {
+            Errors = new List<string> { error },
+            StatusCode = statusCode,
+        };
+    }
 }
