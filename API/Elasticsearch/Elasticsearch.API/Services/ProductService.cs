@@ -67,4 +67,19 @@ public class ProductService
             hasProduct.ToDto(),
             HttpStatusCode.OK);
     }
+
+    public async Task<ResponseDto<bool>> UpdateAsync(ProductUpdateDto updateDto)
+    {
+        var isSuccess = await _productRepository.UpdateAsync(updateDto);
+
+        if (!isSuccess)
+        {
+            return ResponseDto<bool>.Fail(
+                "An error occurred when updating product.",
+                HttpStatusCode.InternalServerError);
+        }
+
+        return ResponseDto<bool>.Success(true, HttpStatusCode.NoContent);
+    }
+
 }

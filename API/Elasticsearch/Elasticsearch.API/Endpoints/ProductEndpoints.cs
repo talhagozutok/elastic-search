@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Elasticsearch.API.Dtos;
 using Elasticsearch.API.Requests;
 using Elasticsearch.API.Services;
 
@@ -13,6 +14,7 @@ public static class ProductEndpoints
             .MapGroup("/api/products");
 
         productRouteGroup.MapPost("/", SaveAsync);
+        productRouteGroup.MapPut("/", UpdateAsync);
         productRouteGroup.MapGet("/", GetAllAsync);
         productRouteGroup.MapGet("/{id}", GetByIdAsync);
     }
@@ -21,6 +23,20 @@ public static class ProductEndpoints
         ProductCreateDto request,
         ProductService productService)
         => Results.Ok(await productService.SaveAsync(request));
+
+    private static async Task<IResult> UpdateAsync(
+        ProductUpdateDto updateDto,
+        ProductService productService)
+    {
+        var response = await productService.UpdateAsync(updateDto);
+
+        if (response.StatusCode is HttpStatusCode.InternalServerError)
+        {
+            return Results.StatusCode((int)HttpStatusCode.InternalServerError);
+        }
+
+        return Results.NoContent();
+    }
 
     private static async Task<IResult> GetAllAsync(
         ProductService productService)
