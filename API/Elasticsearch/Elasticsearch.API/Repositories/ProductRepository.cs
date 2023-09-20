@@ -40,6 +40,11 @@ public class ProductRepository
             s => s.Index(ProductIndexName)
                   .Query(q => q.MatchAll()));
 
+        foreach (var hit in result.Hits)
+        {
+            hit.Source.Id = hit.Id;
+        }
+
         return result.Documents.ToImmutableList();
     }
 }
