@@ -12,10 +12,15 @@ public static class ProductEndpoints
             .MapGroup("/api/products");
 
         productRouteGroup.MapPost("/", SaveAsync);
+        productRouteGroup.MapGet("/", GetAllAsync);
     }
 
     private static async Task<IResult> SaveAsync(
         ProductCreateDto request,
         ProductService productService)
         => Results.Ok(await productService.SaveAsync(request));
+
+    private static async Task<IResult> GetAllAsync(
+        ProductService productService)
+        => Results.Ok(await productService.GetAllAsync());
 }

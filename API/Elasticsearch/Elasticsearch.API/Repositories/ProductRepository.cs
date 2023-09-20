@@ -1,4 +1,5 @@
-﻿using Elasticsearch.API.Models;
+﻿using System.Collections.Immutable;
+using Elasticsearch.API.Models;
 using Nest;
 
 namespace Elasticsearch.API.Repositories;
@@ -6,6 +7,7 @@ namespace Elasticsearch.API.Repositories;
 public class ProductRepository
 {
     private readonly ElasticClient _elasticClient;
+    private const string ProductIndexName = "products";
 
     public ProductRepository(ElasticClient elasticClient)
     {
@@ -19,7 +21,7 @@ public class ProductRepository
         var newGuid = Guid.NewGuid();
         var response = await _elasticClient.IndexAsync(
             product,
-            x => x.Index("products")
+            x => x.Index(ProductIndexName)
                   .Id(newGuid.ToString()));
 
         if (!response.IsValid)
@@ -30,5 +32,14 @@ public class ProductRepository
         product.Id = response.Id;
 
         return product;
+    }
+
+    public async Task<ImmutableList<Product>> GetAllAsync()
+    {
+        var result = await _elasticClient.SearchAsync<Product>(
+            s => s.Index(ProductIndexName)
+                  .Query(q => q.MatchAll()));
+
+        return result.Documents.ToImmutableList();
     }
 }
