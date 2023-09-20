@@ -82,4 +82,17 @@ public class ProductService
         return ResponseDto<bool>.Success(true, HttpStatusCode.NoContent);
     }
 
+    public async Task<ResponseDto<bool>> DeleteAsync(string id)
+    {
+        var isSuccess = await _productRepository.DeleteAsync(id);
+
+        if (!isSuccess)
+        {
+            return ResponseDto<bool>.Fail(
+                "An error occurred when deleting product.",
+                HttpStatusCode.InternalServerError);
+        }
+
+        return ResponseDto<bool>.Success(true, HttpStatusCode.NoContent);
+    }
 }

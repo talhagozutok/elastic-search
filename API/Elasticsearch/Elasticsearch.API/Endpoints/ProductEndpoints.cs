@@ -17,6 +17,7 @@ public static class ProductEndpoints
         productRouteGroup.MapPut("/", UpdateAsync);
         productRouteGroup.MapGet("/", GetAllAsync);
         productRouteGroup.MapGet("/{id}", GetByIdAsync);
+        productRouteGroup.MapDelete("/{id}", DeleteAsync);
     }
 
     private static async Task<IResult> SaveAsync(
@@ -59,5 +60,19 @@ public static class ProductEndpoints
         }
 
         return Results.Ok(productResponse);
+    }
+
+    private static async Task<IResult> DeleteAsync(
+        string id,
+        ProductService productService)
+    {
+        var response = await productService.DeleteAsync(id);
+
+        if (response.StatusCode is HttpStatusCode.InternalServerError)
+        {
+            return Results.StatusCode((int)HttpStatusCode.InternalServerError);
+        }
+
+        return Results.NoContent();
     }
 }
