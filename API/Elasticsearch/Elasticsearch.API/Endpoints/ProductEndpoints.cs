@@ -9,8 +9,7 @@ public static class ProductEndpoints
         this IEndpointRouteBuilder app)
     {
         var productRouteGroup = app
-            .MapGroup("/api/products")
-            .WithName(nameof(ProductEndpoints));
+            .MapGroup("/api/products");
 
         productRouteGroup.MapPost("/", SaveAsync);
     }
