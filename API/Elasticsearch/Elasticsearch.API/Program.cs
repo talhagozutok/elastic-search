@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddElasticClient(builder.Configuration);
 builder.Services.AddScoped(typeof(ProductService));
 builder.Services.AddScoped(typeof(ProductRepository));
+builder.Services.AddScoped(typeof(ECommerceRepository));
 
 var app = builder.Build();
 

@@ -8,5 +8,6 @@ public static class EndpointExtensions
         this IApplicationBuilder applicationBuilder)
     {
         applicationBuilder.UseEndpoints(ProductEndpoints.AddEndpoints);
+        applicationBuilder.UseEndpoints(ECommerceEndpoints.AddEndpoints);
     }
 }
