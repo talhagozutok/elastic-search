@@ -13,6 +13,7 @@ public static class ECommerceEndpoints
         routeGroup.MapPost("/termsQuery", GetTermsQueryAsync);
         routeGroup.MapGet("/prefixQuery", GetPrefixQueryAsync);
         routeGroup.MapGet("/rangeQuery", GetRangeQueryAsync);
+        routeGroup.MapGet("/matchAll", GetMatchAllQueryAsync);
     }
 
     private static async Task<IResult> GetTermQueryAsync(
@@ -34,4 +35,7 @@ public static class ECommerceEndpoints
         double? gte, double? lte,
         ECommerceRepository repository)
         => Results.Ok(await repository.RangeQueryAsync(gte, lte));
+
+    private static async Task<IResult> GetMatchAllQueryAsync(ECommerceRepository repository)
+        => Results.Ok(await repository.MatchAllQueryAsync());
 }
