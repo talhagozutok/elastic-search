@@ -32,14 +32,13 @@ public class ECommerceRepository
          *  }
          *
          */
-        var result = await _elasticClient
-            .SearchAsync<ECommerce>
-            (s =>
-             s.Index(ECommerceIndexName)
-                .Query(q =>
-                     q.Term(t =>
-                        t.Field("customer_first_name.keyword")
-                             .Value(customerFirstName))));
+
+        var result = await _elasticClient.SearchAsync<ECommerce>(s => s
+            .Index(ECommerceIndexName)
+            .Query(q => q
+                .Term(
+                   t => t.CustomerFirstName.Suffix("keyword"),
+                   customerFirstName)));
 
         foreach (var hit in result.Hits)
         {

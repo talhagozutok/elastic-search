@@ -37,9 +37,9 @@ public class ProductRepository
 
     public async Task<ImmutableList<Product>> GetAllAsync()
     {
-        var result = await _elasticClient.SearchAsync<Product>(
-            s => s.Index(ProductIndexName)
-                  .Query(q => q.MatchAll()));
+        var result = await _elasticClient.SearchAsync<Product>(s => s
+            .Index(ProductIndexName)
+            .Query(q => q.MatchAll()));
 
         foreach (var hit in result.Hits)
         {
@@ -53,7 +53,7 @@ public class ProductRepository
     {
         var response = await _elasticClient.GetAsync<Product>(
             id,
-            (desc => desc.Index(ProductIndexName)));
+            desc => desc.Index(ProductIndexName));
 
         if (!response.IsValidResponse)
         {
