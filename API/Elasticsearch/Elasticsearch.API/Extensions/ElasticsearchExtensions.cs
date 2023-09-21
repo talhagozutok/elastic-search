@@ -10,12 +10,12 @@ public static class ElasticsearchExtensions
         IConfigurationRoot configurationRoot)
     {
         var elasticConfigSection = configurationRoot.GetSection("Elastic");
-        string userName = elasticConfigSection["Username"]!;
+        string username = elasticConfigSection["Username"]!;
         string password = elasticConfigSection["Password"]!;
 
         var settings = new ElasticsearchClientSettings(
             new Uri(elasticConfigSection["Url"]!))
-            .Authentication(new BasicAuthentication(userName, password));
+            .Authentication(new BasicAuthentication(username, password));
 
         var client = new ElasticsearchClient(settings);
 

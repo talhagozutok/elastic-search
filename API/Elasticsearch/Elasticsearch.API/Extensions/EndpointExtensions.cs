@@ -7,6 +7,6 @@ public static class EndpointExtensions
     public static void MapAllEndpoints(
         this IApplicationBuilder applicationBuilder)
     {
-        applicationBuilder.UseEndpoints(ProductEndpoints.AddProductEndpoints);
+        applicationBuilder.UseEndpoints(ProductEndpoints.AddEndpoints);
     }
 }

@@ -7,17 +7,16 @@ namespace Elasticsearch.API.Endpoints;
 
 public static class ProductEndpoints
 {
-    public static void AddProductEndpoints(
+    public static void AddEndpoints(
         this IEndpointRouteBuilder app)
     {
-        var productRouteGroup = app
-            .MapGroup("/api/products");
+        var routeGroup = app.MapGroup("/api/products");
 
-        productRouteGroup.MapPost("/", SaveAsync);
-        productRouteGroup.MapPut("/", UpdateAsync);
-        productRouteGroup.MapGet("/", GetAllAsync);
-        productRouteGroup.MapGet("/{id}", GetByIdAsync);
-        productRouteGroup.MapDelete("/{id}", DeleteAsync);
+        routeGroup.MapPost("/", SaveAsync);
+        routeGroup.MapPut("/", UpdateAsync);
+        routeGroup.MapGet("/", GetAllAsync);
+        routeGroup.MapGet("/{id}", GetByIdAsync);
+        routeGroup.MapDelete("/{id}", DeleteAsync);
     }
 
     private static async Task<IResult> SaveAsync(
