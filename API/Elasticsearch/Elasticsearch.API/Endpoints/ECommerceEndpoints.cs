@@ -9,23 +9,29 @@ public static class ECommerceEndpoints
     {
         var routeGroup = app.MapGroup("/api/ecommerce");
 
-        routeGroup.MapGet("/termQuery", GetTermQuery);
-        routeGroup.MapPost("/termsQuery", GetTermsQuery);
-        routeGroup.MapGet("/prefixQuery", GetPrefixQuery);
+        routeGroup.MapGet("/termQuery", GetTermQueryAsync);
+        routeGroup.MapPost("/termsQuery", GetTermsQueryAsync);
+        routeGroup.MapGet("/prefixQuery", GetPrefixQueryAsync);
+        routeGroup.MapGet("/rangeQuery", GetRangeQueryAsync);
     }
 
-    private static async Task<IResult> GetTermQuery(
+    private static async Task<IResult> GetTermQueryAsync(
         string customerFirstName,
         ECommerceRepository repository)
         => Results.Ok(await repository.TermQueryAsync(customerFirstName));
 
-    private static async Task<IResult> GetTermsQuery(
+    private static async Task<IResult> GetTermsQueryAsync(
         List<string> customerFirstNameList,
         ECommerceRepository repository)
         => Results.Ok(await repository.TermsQueryAsync(customerFirstNameList));
 
-    private static async Task<IResult> GetPrefixQuery(
+    private static async Task<IResult> GetPrefixQueryAsync(
         string customerFirstName,
         ECommerceRepository repository)
         => Results.Ok(await repository.PrefixQueryAsync(customerFirstName));
+
+    private static async Task<IResult> GetRangeQueryAsync(
+        double? gte, double? lte,
+        ECommerceRepository repository)
+        => Results.Ok(await repository.RangeQueryAsync(gte, lte));
 }

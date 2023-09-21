@@ -90,4 +90,23 @@ public class ECommerceRepository
 
         return result.Documents.ToImmutableList();
     }
+
+    public async Task<ImmutableList<ECommerce>> RangeQueryAsync(
+        double? gte, double? lte)
+    {
+        var result = await _elasticClient.SearchAsync<ECommerce>(s => s
+            .Index(ECommerceIndexName)
+                .Query(q => q
+                    .Range(r => r
+                        .NumberRange(
+                            nr => nr.Field(f => f.TaxfulTotalPrice)
+                            .Gte(gte).Lte(lte)))));
+
+        foreach (var hit in result.Hits)
+        {
+            hit.Source.Id = hit.Id;
+        }
+
+        return result.Documents.ToImmutableList();
+    }
 }
