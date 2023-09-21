@@ -1,5 +1,5 @@
-﻿using Elasticsearch.Net;
-using Nest;
+﻿using Elastic.Clients.Elasticsearch;
+using Elastic.Transport;
 
 namespace Elasticsearch.API.Extensions;
 
@@ -10,12 +10,15 @@ public static class ElasticsearchExtensions
         IConfigurationRoot configurationRoot)
     {
         var elasticConfigSection = configurationRoot.GetSection("Elastic");
-        var pool = new SingleNodeConnectionPool(new Uri(elasticConfigSection["Url"]!));
+        string userName = elasticConfigSection["Username"]!;
+        string password = elasticConfigSection["Password"]!;
 
-        var settings = new ConnectionSettings(pool);
-        var client = new ElasticClient(settings);
+        var settings = new ElasticsearchClientSettings(
+            new Uri(elasticConfigSection["Url"]!))
+            .Authentication(new BasicAuthentication(userName, password));
 
-        // For ElasticClient recommended lifetime is singleton
-        services.AddSingleton(typeof(ElasticClient), client);
+        var client = new ElasticsearchClient(settings);
+
+        services.AddSingleton(client);
     }
 }

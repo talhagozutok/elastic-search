@@ -1,12 +1,12 @@
-﻿using Elasticsearch.API.Dtos;
+﻿using System.Text.Json.Serialization;
+using Elasticsearch.API.Dtos;
 using Elasticsearch.API.Requests;
-using Nest;
 
 namespace Elasticsearch.API.Models;
 
 public class Product
 {
-    [PropertyName("_id")]
+    [JsonPropertyName("_id")]
     public string Id { get; set; } = null!;
     public string Name { get; set; } = null!;
     public decimal Price { get; set; }

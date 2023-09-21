@@ -1,16 +1,16 @@
 ﻿using System.Collections.Immutable;
+using Elastic.Clients.Elasticsearch;
 using Elasticsearch.API.Dtos;
 using Elasticsearch.API.Models;
-using Nest;
 
 namespace Elasticsearch.API.Repositories;
 
 public class ProductRepository
 {
-    private readonly ElasticClient _elasticClient;
+    private readonly ElasticsearchClient _elasticClient;
     private const string ProductIndexName = "products";
 
-    public ProductRepository(ElasticClient elasticClient)
+    public ProductRepository(ElasticsearchClient elasticClient)
     {
         _elasticClient = elasticClient;
     }
@@ -25,7 +25,7 @@ public class ProductRepository
             x => x.Index(ProductIndexName)
                   .Id(newGuid.ToString()));
 
-        if (!response.IsValid)
+        if (!response.IsValidResponse)
         {
             return null;
         }
@@ -55,7 +55,7 @@ public class ProductRepository
             id,
             (desc => desc.Index(ProductIndexName)));
 
-        if (!response.IsValid)
+        if (!response.IsValidResponse)
         {
             return null;
         }
@@ -65,14 +65,14 @@ public class ProductRepository
         return response.Source;
     }
 
-    public async Task<bool> UpdateAsync(ProductUpdateDto productDto)
+    public async Task<bool> UpdateAsync(ProductUpdateDto productUpdateDto)
     {
         var response = await _elasticClient.UpdateAsync<Product, ProductUpdateDto>(
-            productDto.Id,
-            s => s.Index(ProductIndexName)
-                  .Doc(productDto));
+            ProductIndexName,
+            productUpdateDto.Id,
+            x => x.Doc(productUpdateDto));
 
-        return response.IsValid;
+        return response.IsValidResponse;
     }
 
     public async Task<DeleteResponse> DeleteAsync(string id)
