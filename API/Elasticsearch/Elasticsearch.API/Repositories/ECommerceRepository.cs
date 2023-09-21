@@ -15,7 +15,7 @@ public class ECommerceRepository
         _elasticClient = elasticClient;
     }
 
-    public async Task<ImmutableList<ECommerce>> TermQuery(
+    public async Task<ImmutableList<ECommerce>> TermQueryAsync(
         string customerFirstName)
     {
         /*
@@ -38,7 +38,7 @@ public class ECommerceRepository
             .Index(ECommerceIndexName)
             .Query(q => q
                 .Term(
-                   t => t.CustomerFirstName.Suffix("keyword"),
+                   f => f.CustomerFirstName.Suffix("keyword"),
                    customerFirstName)));
 
         foreach (var hit in result.Hits)
@@ -49,7 +49,7 @@ public class ECommerceRepository
         return result.Documents.ToImmutableList();
     }
 
-    public async Task<ImmutableList<ECommerce>> TermsQuery(
+    public async Task<ImmutableList<ECommerce>> TermsQueryAsync(
         List<string> customerFirstNameList)
     {
         var terms = new List<FieldValue>();
@@ -64,6 +64,24 @@ public class ECommerceRepository
         var result = await _elasticClient.SearchAsync<ECommerce>(s => s
             .Index(ECommerceIndexName)
             .Query(termsQuery));
+
+        foreach (var hit in result.Hits)
+        {
+            hit.Source.Id = hit.Id;
+        }
+
+        return result.Documents.ToImmutableList();
+    }
+
+    public async Task<ImmutableList<ECommerce>> PrefixQueryAsync(
+        string customerFirstName)
+    {
+        var result = await _elasticClient.SearchAsync<ECommerce>(s => s
+            .Index(ECommerceIndexName)
+            .Query(q => q
+                .Prefix(p => p
+                    .Field(f => f.CustomerFirstName.Suffix("keyword"))
+                    .Value(customerFirstName))));
 
         foreach (var hit in result.Hits)
         {

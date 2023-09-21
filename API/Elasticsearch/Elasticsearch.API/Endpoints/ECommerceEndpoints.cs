@@ -11,15 +11,21 @@ public static class ECommerceEndpoints
 
         routeGroup.MapGet("/termQuery", GetTermQuery);
         routeGroup.MapPost("/termsQuery", GetTermsQuery);
+        routeGroup.MapGet("/prefixQuery", GetPrefixQuery);
     }
 
     private static async Task<IResult> GetTermQuery(
         string customerFirstName,
         ECommerceRepository repository)
-        => Results.Ok(await repository.TermQuery(customerFirstName));
+        => Results.Ok(await repository.TermQueryAsync(customerFirstName));
 
     private static async Task<IResult> GetTermsQuery(
-        List<string> fieldValues,
+        List<string> customerFirstNameList,
         ECommerceRepository repository)
-        => Results.Ok(await repository.TermsQuery(fieldValues));
+        => Results.Ok(await repository.TermsQueryAsync(customerFirstNameList));
+
+    private static async Task<IResult> GetPrefixQuery(
+        string customerFirstName,
+        ECommerceRepository repository)
+        => Results.Ok(await repository.PrefixQueryAsync(customerFirstName));
 }
