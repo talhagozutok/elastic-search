@@ -28,4 +28,48 @@ public class BlogRepository
 
         return blog;
     }
+
+    public async Task<List<Blog>> SearchAsync(string searchText)
+    {
+        // should ( (term1 or term2) or term3 )
+
+        /*
+         * // .net 5 ile gelen yenilikler
+         * POST /blog/_search
+         *  {
+         *    "query": {
+         *      "bool": {
+         *        "should": [
+         *          {
+         *            "match": {
+         *              "title": "yenilik"
+         *            }
+         *          },
+         *          {
+         *            "match_bool_prefix": {
+         *              "title": "yenilik"
+         *            }
+         *          }
+         *        ]
+         *      }
+         *    }
+         *  }
+         * 
+         */
+
+        var result = await _elasticClient.SearchAsync<Blog>(s => s
+            .Index(IndexName)
+                .Query(q => q
+                    .Bool(bq => bq
+                        .Should(
+                            s => s.Match(m => m.Field(f => f.Content).Query(searchText)),
+                            s => s.MatchBoolPrefix(m => m.Field(f => f.Title).Query(searchText))))));
+
+        foreach (var hit in result.Hits)
+        {
+            hit.Source.Id = hit.Id;
+        }
+
+        return result.Documents.ToList();
+    }
 }

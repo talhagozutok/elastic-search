@@ -34,4 +34,9 @@ public class BlogService
 
         return isBlogCreated;
     }
+
+    public async Task<List<Blog>> SearchAsync(string searchText)
+    {
+        return await _blogRepository.SearchAsync(searchText);
+    }
 }
