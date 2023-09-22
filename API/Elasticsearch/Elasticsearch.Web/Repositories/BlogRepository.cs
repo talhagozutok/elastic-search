@@ -1,4 +1,5 @@
 ﻿using Elastic.Clients.Elasticsearch;
+using Elastic.Clients.Elasticsearch.QueryDsl;
 using Elasticsearch.Web.Models;
 
 namespace Elasticsearch.Web.Repositories;
@@ -33,6 +34,18 @@ public class BlogRepository
     {
         // should ( (term1 or term2) or term3 )
 
+        List<Action<QueryDescriptor<Blog>>> queryDescriptors = new();
+
+        Action<QueryDescriptor<Blog>> matchAll = q => q.MatchAll();
+
+        Action<QueryDescriptor<Blog>> matchQuery = s => s
+            .Match(m => m.Field(f => f.Content)
+                         .Query(searchText));
+
+        Action<QueryDescriptor<Blog>> matchBoolPrefixQuery = s => s
+            .MatchBoolPrefix(m => m.Field(f => f.Title)
+                                   .Query(searchText));
+
         /*
          * // .net 5 ile gelen yenilikler
          * POST /blog/_search
@@ -57,13 +70,20 @@ public class BlogRepository
          * 
          */
 
+        if (string.IsNullOrEmpty(searchText))
+        {
+            queryDescriptors.Add(matchAll);
+        }
+        else
+        {
+            queryDescriptors.Add(matchQuery);
+            queryDescriptors.Add(matchBoolPrefixQuery);
+        }
+
         var result = await _elasticClient.SearchAsync<Blog>(s => s
             .Index(IndexName)
                 .Query(q => q
-                    .Bool(bq => bq
-                        .Should(
-                            s => s.Match(m => m.Field(f => f.Content).Query(searchText)),
-                            s => s.MatchBoolPrefix(m => m.Field(f => f.Title).Query(searchText))))));
+                    .Bool(bq => bq.Should(queryDescriptors.ToArray()))));
 
         foreach (var hit in result.Hits)
         {

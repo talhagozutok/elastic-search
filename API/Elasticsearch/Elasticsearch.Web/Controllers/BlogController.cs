@@ -1,5 +1,4 @@
-﻿using Elasticsearch.Web.Models;
-using Elasticsearch.Web.Services;
+﻿using Elasticsearch.Web.Services;
 using Elasticsearch.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,22 +12,21 @@ public class BlogController : Controller
         _blogService = blogService;
     }
 
-    public IActionResult Search()
+    public async Task<IActionResult> Search()
     {
-        return View();
+        return View(await _blogService.SearchAsync(string.Empty));
     }
 
     public IActionResult Save()
     {
-        return View(new List<Blog>());
+        return View();
     }
 
     [HttpPost]
     public async Task<IActionResult> Search([FromForm] string searchText)
     {
-        var blogList = await _blogService.SearchAsync(searchText);
-
-        return View(blogList);
+        ViewData["searchText"] = searchText;
+        return View(await _blogService.SearchAsync(searchText));
     }
 
     [HttpPost]
