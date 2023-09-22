@@ -9,6 +9,7 @@ public class ECommerceRepository
 {
     private readonly ElasticsearchClient _elasticClient;
     private const string ECommerceIndexName = "kibana_sample_data_ecommerce";
+    private const string KeywordSuffix = "keyword";
 
     public ECommerceRepository(ElasticsearchClient elasticClient)
     {
@@ -39,7 +40,7 @@ public class ECommerceRepository
             .Index(ECommerceIndexName)
             .Query(q => q
                 .Term(
-                   f => f.CustomerFirstName.Suffix("keyword"),
+                   f => f.CustomerFirstName.Suffix(KeywordSuffix),
                    customerFirstName)));
 
         foreach (var hit in result.Hits)
@@ -81,7 +82,7 @@ public class ECommerceRepository
             .Index(ECommerceIndexName)
             .Query(q => q
                 .Prefix(p => p
-                    .Field(f => f.CustomerFirstName.Suffix("keyword"))
+                    .Field(f => f.CustomerFirstName.Suffix(KeywordSuffix))
                     .Value(customerFirstName))));
 
         foreach (var hit in result.Hits)
@@ -149,7 +150,7 @@ public class ECommerceRepository
             .Index(ECommerceIndexName)
             .Query(q => q
                 .Wildcard(p => p
-                    .Field(f => f.CustomerFullName.Suffix("keyword"))
+                    .Field(f => f.CustomerFullName.Suffix(KeywordSuffix))
                     .Value(customerFullNameWildcard))));
 
         foreach (var hit in result.Hits)
@@ -167,7 +168,7 @@ public class ECommerceRepository
             .Index(ECommerceIndexName)
             .Query(q => q
                 .Fuzzy(p => p
-                    .Field(f => f.CustomerFirstName.Suffix("keyword"))
+                    .Field(f => f.CustomerFirstName.Suffix(KeywordSuffix))
                     .Value(customerFirstName)))
             .Sort(
                 s => s.Field(f => f.TaxfulTotalPrice,
