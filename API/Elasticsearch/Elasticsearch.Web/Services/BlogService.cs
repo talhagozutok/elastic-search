@@ -35,8 +35,18 @@ public class BlogService
         return isBlogCreated;
     }
 
-    public async Task<List<Blog>> SearchAsync(string searchText)
+    public async Task<List<BlogViewModel>> SearchAsync(string searchText)
     {
-        return await _blogRepository.SearchAsync(searchText);
+        var blogList = await _blogRepository.SearchAsync(searchText);
+
+        return blogList.Select(b => new BlogViewModel()
+        {
+            Id = b.Id,
+            Title = b.Title,
+            Content = b.Content,
+            UserId = b.UserId.ToString(),
+            Tags = string.Join(", ", b.Tags),
+            CreatedOn = b.CreatedOn.ToShortDateString()
+        }).ToList();
     }
 }
