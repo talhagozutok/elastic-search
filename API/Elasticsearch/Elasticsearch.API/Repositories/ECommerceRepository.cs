@@ -153,4 +153,23 @@ public class ECommerceRepository
 
         return result.Documents.ToImmutableList();
     }
+
+    public async Task<ImmutableList<ECommerce>> FuzzyQueryAsync(
+        string customerFirstName)
+    {
+        var result = await _elasticClient.SearchAsync<ECommerce>(s => s
+            .Index(ECommerceIndexName)
+            .Query(q => q
+                .Fuzzy(p => p
+                    .Field(f => f.CustomerFirstName.Suffix("keyword"))
+                    .Value(customerFirstName)))
+            .Sort(
+                s => s.Field(f => f.TaxfulTotalPrice,
+                new FieldSort() { Order = SortOrder.Desc })));
+
+        return result.Documents.ToImmutableList();
+    }
+
+        return result.Documents.ToImmutableList();
+    }
 }

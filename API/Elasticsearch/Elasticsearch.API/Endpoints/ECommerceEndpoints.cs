@@ -16,6 +16,7 @@ public static class ECommerceEndpoints
         routeGroup.MapGet("/matchAll", GetMatchAllQueryAsync);
         routeGroup.MapGet("/paginationQuery", GetPaginationQueryAsync);
         routeGroup.MapGet("/wildcardQuery", GetWildcardQueryAsync);
+        routeGroup.MapGet("/fuzzyQuery", GetFuzzyQueryAsync);
     }
 
     private static async Task<IResult> GetTermQueryAsync(
@@ -51,4 +52,8 @@ public static class ECommerceEndpoints
         string customerFullNameWildcard,
         ECommerceRepository repository)
         => Results.Ok(await repository.WildcardQueryAsync(customerFullNameWildcard));
+    private static async Task<IResult> GetFuzzyQueryAsync(
+        string customerFirstNameWildcard,
+        ECommerceRepository repository)
+        => Results.Ok(await repository.FuzzyQueryAsync(customerFirstNameWildcard));
 }
