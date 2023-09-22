@@ -185,5 +185,18 @@ public class ECommerceRepository
 
         return result.Documents.ToImmutableList();
     }
+
+    public async Task<ImmutableList<ECommerce>> MatchBoolPrefixAsync(
+        string customerFullName)
+    {
+        var result = await _elasticClient.SearchAsync<ECommerce>(s => s
+            .Index(ECommerceIndexName)
+            .Query(q => q
+                .MatchBoolPrefix(p => p
+                    .Field(f => f.CustomerFullName)
+                    .Query(customerFullName))));
+
+        return result.Documents.ToImmutableList();
+    }
     #endregion
 }
