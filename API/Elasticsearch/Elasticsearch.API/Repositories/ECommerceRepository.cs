@@ -15,6 +15,7 @@ public class ECommerceRepository
         _elasticClient = elasticClient;
     }
 
+    #region Term-level queries
     public async Task<ImmutableList<ECommerce>> TermQueryAsync(
         string customerFirstName)
     {
@@ -169,7 +170,20 @@ public class ECommerceRepository
 
         return result.Documents.ToImmutableList();
     }
+    #endregion
+
+    #region Full text queries
+    public async Task<ImmutableList<ECommerce>> MatchQueryAsync(
+        string categoryName)
+    {
+        var result = await _elasticClient.SearchAsync<ECommerce>(s => s
+            .Index(ECommerceIndexName)
+            .Query(q => q
+                .Match(p => p
+                    .Field(f => f.Category)
+                    .Query(categoryName))));
 
         return result.Documents.ToImmutableList();
     }
+    #endregion
 }
