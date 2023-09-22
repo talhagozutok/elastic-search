@@ -1,0 +1,46 @@
+﻿@model BlogCreateViewModel
+
+@{
+    ViewData["Title"] = "Save";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h2>Blog Create</h2>
+    </div>
+
+    <form asp-action="Save">
+        @if (TempData["result"] != null)
+        {
+            <div class="alert alert-info">
+                @TempData["result"]
+            </div>
+        }
+        <div asp-validation-summary="All" class="text-danger">
+        </div>
+        <div class="form-floating mb-3">
+            <input asp-for="Title"
+                   type="text"
+                   class="form-control">
+            <label asp-for="Title"></label>
+        </div>
+        <div class="form-floating mb-3">
+            <textarea asp-for="Content"
+                      class="form-control"
+                      style="height: 100px; max-height: 500px;"></textarea>
+            <label asp-for="Content"></label>
+        </div>
+        <div class="form-floating mb-3">
+            <input asp-for="Tags"
+                   type="text"
+                   class="form-control">
+            <label asp-for="Tags">
+                Tags (comma separated)
+            </label>
+        </div>
+        <button type="submit"
+                class="btn btn-primary">
+            Submit
+        </button>
+    </form>
+</div>
