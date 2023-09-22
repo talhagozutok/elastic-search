@@ -124,4 +124,15 @@ public class ECommerceRepository
 
         return result.Documents.ToImmutableList();
     }
+
+    public async Task<ImmutableList<ECommerce>> PaginationQueryAsync(
+        int page, int pageSize)
+    {
+        var result = await _elasticClient.SearchAsync<ECommerce>(s => s
+            .Index(ECommerceIndexName)
+            .Size(pageSize).From((page - 1) * pageSize)
+            .Query(q => q.MatchAll()));
+
+        return result.Documents.ToImmutableList();
+    }
 }

@@ -14,6 +14,7 @@ public static class ECommerceEndpoints
         routeGroup.MapGet("/prefixQuery", GetPrefixQueryAsync);
         routeGroup.MapGet("/rangeQuery", GetRangeQueryAsync);
         routeGroup.MapGet("/matchAll", GetMatchAllQueryAsync);
+        routeGroup.MapGet("/paginationQuery", GetPaginationQueryAsync);
     }
 
     private static async Task<IResult> GetTermQueryAsync(
@@ -36,6 +37,12 @@ public static class ECommerceEndpoints
         ECommerceRepository repository)
         => Results.Ok(await repository.RangeQueryAsync(gte, lte));
 
-    private static async Task<IResult> GetMatchAllQueryAsync(ECommerceRepository repository)
+    private static async Task<IResult> GetMatchAllQueryAsync(
+        ECommerceRepository repository)
         => Results.Ok(await repository.MatchAllQueryAsync());
+
+    private static async Task<IResult> GetPaginationQueryAsync(
+        ECommerceRepository repository,
+        int page = 1, int pageSize = 5)
+        => Results.Ok(await repository.PaginationQueryAsync(page, pageSize));
 }
