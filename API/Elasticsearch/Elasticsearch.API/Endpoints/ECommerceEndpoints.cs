@@ -18,6 +18,7 @@ public static class ECommerceEndpoints
         routeGroup.MapGet("/wildcardQuery", WildcardQueryAsync);
         routeGroup.MapGet("/fuzzyQuery", FuzzyQueryAsync);
         routeGroup.MapGet("/matchQuery", MatchQueryAsync);
+        routeGroup.MapGet("/multiMatchQuery", MultiMatchQueryAsync);
         routeGroup.MapGet("/matchBoolPrefixQuery", MatchBoolPrefixAsync);
         routeGroup.MapGet("/matchPhraseQuery", MatchPhraseQueryAsync);
         routeGroup.MapGet("/compoundQuery", CompoundQueryAsync);
@@ -66,6 +67,11 @@ public static class ECommerceEndpoints
         string categoryName,
         ECommerceRepository repository)
         => Results.Ok(await repository.MatchQueryAsync(categoryName));
+
+    private static async Task<IResult> MultiMatchQueryAsync(
+        string name,
+        ECommerceRepository repository)
+        => Results.Ok(await repository.MultiMatchQueryAsync(name));
 
     private static async Task<IResult> MatchBoolPrefixAsync(
         string customerFullName,

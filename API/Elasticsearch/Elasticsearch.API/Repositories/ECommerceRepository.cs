@@ -202,6 +202,25 @@ public class ECommerceRepository
         return result.Documents.ToImmutableList();
     }
 
+    public async Task<ImmutableList<ECommerce>> MultiMatchQueryAsync(
+        string name)
+    {
+        var result = await _elasticClient.SearchAsync<ECommerce>(s => s
+            .Index(ECommerceIndexName)
+            .Query(q => q
+                .MultiMatch(q => q.Query(name)
+                                  .Fields(new Field("customer_first_name")
+                                               .And("customer_last_name")
+                                               .And("customer_full_name")))));
+
+        foreach (var hit in result.Hits)
+        {
+            hit.Source.Id = hit.Id;
+        }
+
+        return result.Documents.ToImmutableList();
+    }
+
     public async Task<ImmutableList<ECommerce>> MatchBoolPrefixAsync(
         string customerFullName)
     {
