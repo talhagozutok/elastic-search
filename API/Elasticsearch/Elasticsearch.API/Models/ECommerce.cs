@@ -19,6 +19,12 @@ public class ECommerce
     [JsonPropertyName("taxful_total_price")]
     public double TaxfulTotalPrice { get; set; }
 
+    [JsonPropertyName("geoip.city_name")]
+    public string CityName { get; set; } = null!;
+
+    [JsonPropertyName("manufacturer")]
+    public string[] Manufacturer { get; set; } = null!;
+
     [JsonPropertyName("category")]
     public string[] Category { get; set; } = null!;
 

@@ -20,6 +20,7 @@ public static class ECommerceEndpoints
         routeGroup.MapGet("/matchQuery", MatchQueryAsync);
         routeGroup.MapGet("/matchBoolPrefixQuery", MatchBoolPrefixAsync);
         routeGroup.MapGet("/matchPhraseQuery", MatchPhraseQueryAsync);
+        routeGroup.MapGet("/compoundQuery", CompoundQueryAsync);
     }
 
     private static async Task<IResult> TermQueryAsync(
@@ -75,4 +76,16 @@ public static class ECommerceEndpoints
         string customerFullName,
         ECommerceRepository repository)
         => Results.Ok(await repository.MatchPhraseQueryAsync(customerFullName));
+
+    private static async Task<IResult> CompoundQueryAsync(
+        string cityName,
+        double taxfulTotalPriceLte,
+        string categoryKeyword,
+        string manufacturerKeyword,
+        ECommerceRepository repository)
+        => Results.Ok(await repository.CompoundQueryAsync(
+            cityName,
+            taxfulTotalPriceLte,
+            categoryKeyword,
+            manufacturerKeyword));
 }
