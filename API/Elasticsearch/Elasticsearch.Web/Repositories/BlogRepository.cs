@@ -38,13 +38,16 @@ public class BlogRepository
 
         Action<QueryDescriptor<Blog>> matchAll = q => q.MatchAll();
 
-        Action<QueryDescriptor<Blog>> matchQuery = s => s
+        Action<QueryDescriptor<Blog>> matchContent = s => s
             .Match(m => m.Field(f => f.Content)
                          .Query(searchText));
 
-        Action<QueryDescriptor<Blog>> matchBoolPrefixQuery = s => s
+        Action<QueryDescriptor<Blog>> matchTitle = s => s
             .MatchBoolPrefix(m => m.Field(f => f.Title)
                                    .Query(searchText));
+
+        Action<QueryDescriptor<Blog>> matchTag = s => s
+            .Term(f => f.Tags, searchText);
 
         /*
          * // .net 5 ile gelen yenilikler
@@ -76,8 +79,9 @@ public class BlogRepository
         }
         else
         {
-            queryDescriptors.Add(matchQuery);
-            queryDescriptors.Add(matchBoolPrefixQuery);
+            queryDescriptors.Add(matchContent);
+            queryDescriptors.Add(matchTitle);
+            queryDescriptors.Add(matchTag);
         }
 
         var result = await _elasticClient.SearchAsync<Blog>(s => s
