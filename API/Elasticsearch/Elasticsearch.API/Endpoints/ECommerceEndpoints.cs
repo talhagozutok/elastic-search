@@ -19,6 +19,7 @@ public static class ECommerceEndpoints
         routeGroup.MapGet("/fuzzyQuery", GetFuzzyQueryAsync);
         routeGroup.MapGet("/matchQuery", GetMatchQueryAsync);
         routeGroup.MapGet("/matchBoolPrefixQuery", GetMatchBoolPrefixAsync);
+        routeGroup.MapGet("/matchPhraseQuery", GetMatchPhraseQueryAsync);
     }
 
     private static async Task<IResult> GetTermQueryAsync(
@@ -69,4 +70,9 @@ public static class ECommerceEndpoints
         string customerFullName,
         ECommerceRepository repository)
         => Results.Ok(await repository.MatchBoolPrefixAsync(customerFullName));
+
+    private static async Task<IResult> GetMatchPhraseQueryAsync(
+        string customerFullName,
+        ECommerceRepository repository)
+        => Results.Ok(await repository.MatchPhraseQueryAsync(customerFullName));
 }
