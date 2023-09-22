@@ -134,6 +134,11 @@ public class ECommerceRepository
             .Size(pageSize).From((page - 1) * pageSize)
             .Query(q => q.MatchAll()));
 
+        foreach (var hit in result.Hits)
+        {
+            hit.Source.Id = hit.Id;
+        }
+
         return result.Documents.ToImmutableList();
     }
 
@@ -168,6 +173,11 @@ public class ECommerceRepository
                 s => s.Field(f => f.TaxfulTotalPrice,
                 new FieldSort() { Order = SortOrder.Desc })));
 
+        foreach (var hit in result.Hits)
+        {
+            hit.Source.Id = hit.Id;
+        }
+
         return result.Documents.ToImmutableList();
     }
     #endregion
@@ -183,6 +193,11 @@ public class ECommerceRepository
                     .Field(f => f.Category)
                     .Query(categoryName))));
 
+        foreach (var hit in result.Hits)
+        {
+            hit.Source.Id = hit.Id;
+        }
+
         return result.Documents.ToImmutableList();
     }
 
@@ -195,6 +210,11 @@ public class ECommerceRepository
                 .MatchBoolPrefix(p => p
                     .Field(f => f.CustomerFullName)
                     .Query(customerFullName))));
+
+        foreach (var hit in result.Hits)
+        {
+            hit.Source.Id = hit.Id;
+        }
 
         return result.Documents.ToImmutableList();
     }
