@@ -8,7 +8,8 @@ namespace Elasticsearch.API.Repositories;
 public class ProductRepository
 {
     private readonly ElasticsearchClient _elasticClient;
-    private const string ProductIndexName = "products";
+
+    private const string IndexName = "products";
 
     public ProductRepository(ElasticsearchClient elasticClient)
     {
@@ -22,7 +23,7 @@ public class ProductRepository
         var newGuid = Guid.NewGuid();
         var response = await _elasticClient.IndexAsync(
             product,
-            x => x.Index(ProductIndexName)
+            x => x.Index(IndexName)
                   .Id(newGuid.ToString()));
 
         if (!response.IsValidResponse)
@@ -38,7 +39,7 @@ public class ProductRepository
     public async Task<ImmutableList<Product>> GetAllAsync()
     {
         var result = await _elasticClient.SearchAsync<Product>(s => s
-            .Index(ProductIndexName)
+            .Index(IndexName)
             .Query(q => q.MatchAll()));
 
         foreach (var hit in result.Hits)
@@ -53,7 +54,7 @@ public class ProductRepository
     {
         var response = await _elasticClient.GetAsync<Product>(
             id,
-            desc => desc.Index(ProductIndexName));
+            desc => desc.Index(IndexName));
 
         if (!response.IsValidResponse)
         {
@@ -68,7 +69,7 @@ public class ProductRepository
     public async Task<bool> UpdateAsync(ProductUpdateDto productUpdateDto)
     {
         var response = await _elasticClient.UpdateAsync<Product, ProductUpdateDto>(
-            ProductIndexName,
+            IndexName,
             productUpdateDto.Id,
             x => x.Doc(productUpdateDto));
 
@@ -79,7 +80,7 @@ public class ProductRepository
     {
         var response = await _elasticClient.DeleteAsync<Product>(
             id,
-            s => s.Index(ProductIndexName));
+            s => s.Index(IndexName));
 
         return response;
     }

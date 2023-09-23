@@ -8,7 +8,8 @@ namespace Elasticsearch.API.Repositories;
 public class ECommerceRepository
 {
     private readonly ElasticsearchClient _elasticClient;
-    private const string ECommerceIndexName = "kibana_sample_data_ecommerce";
+
+    private const string IndexName = "kibana_sample_data_ecommerce";
     private const string KeywordSuffix = "keyword";
 
     public ECommerceRepository(ElasticsearchClient elasticClient)
@@ -37,7 +38,7 @@ public class ECommerceRepository
          */
 
         var result = await _elasticClient.SearchAsync<ECommerce>(s => s
-            .Index(ECommerceIndexName)
+            .Index(IndexName)
             .Query(q => q
                 .Term(
                    f => f.CustomerFirstName.Suffix(KeywordSuffix),
@@ -64,7 +65,7 @@ public class ECommerceRepository
         };
 
         var result = await _elasticClient.SearchAsync<ECommerce>(s => s
-            .Index(ECommerceIndexName)
+            .Index(IndexName)
             .Query(termsQuery));
 
         foreach (var hit in result.Hits)
@@ -79,7 +80,7 @@ public class ECommerceRepository
         string customerFirstName)
     {
         var result = await _elasticClient.SearchAsync<ECommerce>(s => s
-            .Index(ECommerceIndexName)
+            .Index(IndexName)
             .Query(q => q
                 .Prefix(p => p
                     .Field(f => f.CustomerFirstName.Suffix(KeywordSuffix))
@@ -97,12 +98,12 @@ public class ECommerceRepository
         double? gte, double? lte)
     {
         var result = await _elasticClient.SearchAsync<ECommerce>(s => s
-            .Index(ECommerceIndexName)
-                .Query(q => q
-                    .Range(r => r
-                        .NumberRange(
-                            nr => nr.Field(f => f.TaxfulTotalPrice)
-                            .Gte(gte).Lte(lte)))));
+            .Index(IndexName)
+            .Query(q => q
+                .Range(r => r
+                    .NumberRange(nr => nr
+                        .Field(f => f.TaxfulTotalPrice)
+                        .Gte(gte).Lte(lte)))));
 
         foreach (var hit in result.Hits)
         {
@@ -115,7 +116,7 @@ public class ECommerceRepository
     public async Task<ImmutableList<ECommerce>> MatchAllQueryAsync()
     {
         var result = await _elasticClient.SearchAsync<ECommerce>(s => s
-            .Index(ECommerceIndexName)
+            .Index(IndexName)
             .Query(q => q
                 .MatchAll()));
 
@@ -131,7 +132,7 @@ public class ECommerceRepository
         int page, int pageSize)
     {
         var result = await _elasticClient.SearchAsync<ECommerce>(s => s
-            .Index(ECommerceIndexName)
+            .Index(IndexName)
             .Size(pageSize).From((page - 1) * pageSize)
             .Query(q => q.MatchAll()));
 
@@ -147,7 +148,7 @@ public class ECommerceRepository
         string customerFullNameWildcard)
     {
         var result = await _elasticClient.SearchAsync<ECommerce>(s => s
-            .Index(ECommerceIndexName)
+            .Index(IndexName)
             .Query(q => q
                 .Wildcard(p => p
                     .Field(f => f.CustomerFullName.Suffix(KeywordSuffix))
@@ -165,13 +166,13 @@ public class ECommerceRepository
         string customerFirstName)
     {
         var result = await _elasticClient.SearchAsync<ECommerce>(s => s
-            .Index(ECommerceIndexName)
+            .Index(IndexName)
             .Query(q => q
                 .Fuzzy(p => p
                     .Field(f => f.CustomerFirstName.Suffix(KeywordSuffix))
                     .Value(customerFirstName)))
-            .Sort(
-                s => s.Field(f => f.TaxfulTotalPrice,
+            .Sort(s => s
+                .Field(f => f.TaxfulTotalPrice,
                 new FieldSort() { Order = SortOrder.Desc })));
 
         foreach (var hit in result.Hits)
@@ -188,7 +189,7 @@ public class ECommerceRepository
         string categoryName)
     {
         var result = await _elasticClient.SearchAsync<ECommerce>(s => s
-            .Index(ECommerceIndexName)
+            .Index(IndexName)
             .Query(q => q
                 .Match(p => p
                     .Field(f => f.Category)
@@ -206,12 +207,13 @@ public class ECommerceRepository
         string name)
     {
         var result = await _elasticClient.SearchAsync<ECommerce>(s => s
-            .Index(ECommerceIndexName)
+            .Index(IndexName)
             .Query(q => q
-                .MultiMatch(q => q.Query(name)
-                                  .Fields(new Field("customer_first_name")
-                                               .And("customer_last_name")
-                                               .And("customer_full_name")))));
+                .MultiMatch(q => q
+                    .Query(name)
+                    .Fields(new Field("customer_first_name")
+                                .And("customer_last_name")
+                                .And("customer_full_name")))));
 
         foreach (var hit in result.Hits)
         {
@@ -225,7 +227,7 @@ public class ECommerceRepository
         string customerFullName)
     {
         var result = await _elasticClient.SearchAsync<ECommerce>(s => s
-            .Index(ECommerceIndexName)
+            .Index(IndexName)
             .Query(q => q
                 .MatchBoolPrefix(p => p
                     .Field(f => f.CustomerFullName)
@@ -243,7 +245,7 @@ public class ECommerceRepository
         string customerFullName)
     {
         var result = await _elasticClient.SearchAsync<ECommerce>(s => s
-            .Index(ECommerceIndexName)
+            .Index(IndexName)
             .Query(q => q
                 .MatchPhrase(p => p
                     .Field(f => f.CustomerFullName)
@@ -264,7 +266,7 @@ public class ECommerceRepository
         string manufacturerKeyword)
     {
         var result = await _elasticClient.SearchAsync<ECommerce>(s => s
-            .Index(ECommerceIndexName)
+            .Index(IndexName)
             .Query(q => q
                 .Bool(b => b
                     .Must(bq => bq.Term(f => f.CityName, cityName))
