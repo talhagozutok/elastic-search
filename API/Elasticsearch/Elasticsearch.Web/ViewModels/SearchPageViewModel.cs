@@ -10,7 +10,7 @@ public class SearchPageViewModel
     public ECommerceSearchViewModel SearchViewModel { get; set; }
 
     public string CreatePageUrl(
-        int page,
+        long page,
         int pageSize,
         HttpRequest request)
     {
@@ -19,11 +19,11 @@ public class SearchPageViewModel
         if (currentUrl.Contains("page", StringComparison.OrdinalIgnoreCase))
         {
             currentUrl = currentUrl.Replace(
-                $"Page=${Page}", $"Page={page}",
+                $"Page={Page}", $"Page={page}",
                 StringComparison.OrdinalIgnoreCase);
 
             currentUrl = currentUrl.Replace(
-                $"PageSize=${PageSize}", $"Page={pageSize}",
+                $"PageSize={PageSize}", $"Page={pageSize}",
                 StringComparison.OrdinalIgnoreCase);
         }
         else
