@@ -1,6 +1,6 @@
 ﻿using Elasticsearch.API.Models;
 
-namespace Elasticsearch.API.Requests;
+namespace Elasticsearch.API.Dtos;
 
 public record ProductCreateDto(
     string Name,

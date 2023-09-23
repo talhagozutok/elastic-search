@@ -1,4 +1,4 @@
-﻿namespace Elasticsearch.API.Requests;
+﻿namespace Elasticsearch.API.Dtos;
 
 public record ProductFeatureDto(
     int? Width,

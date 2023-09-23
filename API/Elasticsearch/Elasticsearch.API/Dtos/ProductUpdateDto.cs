@@ -1,6 +1,4 @@
-﻿using Elasticsearch.API.Requests;
-
-namespace Elasticsearch.API.Dtos;
+﻿namespace Elasticsearch.API.Dtos;
 
 public record ProductUpdateDto(
     string Id,

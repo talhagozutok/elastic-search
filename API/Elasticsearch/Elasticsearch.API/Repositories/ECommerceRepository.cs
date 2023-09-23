@@ -1,7 +1,6 @@
 ﻿using System.Collections.Immutable;
 using Elastic.Clients.Elasticsearch;
 using Elastic.Clients.Elasticsearch.QueryDsl;
-using Elasticsearch.API.Models.ECommerceModel;
 
 namespace Elasticsearch.API.Repositories;
 

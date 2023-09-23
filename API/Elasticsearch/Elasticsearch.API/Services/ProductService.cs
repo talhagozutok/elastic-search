@@ -3,7 +3,6 @@ using System.Net;
 using Elastic.Clients.Elasticsearch;
 using Elasticsearch.API.Dtos;
 using Elasticsearch.API.Repositories;
-using Elasticsearch.API.Requests;
 
 namespace Elasticsearch.API.Services;
 

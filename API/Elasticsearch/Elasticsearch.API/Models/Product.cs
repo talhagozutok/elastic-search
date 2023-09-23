@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Serialization;
 using Elasticsearch.API.Dtos;
-using Elasticsearch.API.Requests;
 
 namespace Elasticsearch.API.Models;
 
