@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Elasticsearch.Web.Repositories;
+﻿using Elasticsearch.Web.Repositories;
 using Elasticsearch.Web.ViewModels;
 
 namespace Elasticsearch.Web.Services;
@@ -35,13 +34,12 @@ public class ECommerceService
             pageCount = (totalCount / pageSize) + 1;
         }
 
-        TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
         var eCommerceListViewModel = eCommerceList.Select(x => new ECommerceViewModel()
         {
             CustomerFirstName = x.CustomerFirstName,
             CustomerLastName = x.CustomerLastName,
             CustomerFullName = x.CustomerFullName,
-            Gender = ti.ToTitleCase(x.Gender),
+            Gender = x.Gender.ToLower(),
             OrderId = x.OrderId,
             OrderDate = x.OrderDate.ToShortDateString(),
             TaxfulTotalPrice = x.TaxfulTotalPrice,

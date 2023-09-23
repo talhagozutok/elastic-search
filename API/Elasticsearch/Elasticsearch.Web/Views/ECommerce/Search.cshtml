@@ -1,7 +1,75 @@
-﻿
+﻿@model SearchPageViewModel
+
 @{
     ViewData["Title"] = "Search";
 }
 
 <h1>Search</h1>
 
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <form asp-action="Search" method="get">
+                @if (TempData["result"] != null)
+                {
+                    <div class="alert alert-info">
+                        @TempData["result"]
+                    </div>
+                }
+                <div class="form-floating mb-3">
+                    <input asp-for="SearchViewModel.CustomerFullName" class="form-control">
+                    <label asp-for="SearchViewModel.CustomerFullName"></label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="SearchViewModel.Category" class="form-control">
+                    <label asp-for="SearchViewModel.Category"></label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="SearchViewModel.Gender" class="form-control">
+                    <label asp-for="SearchViewModel.Gender"></label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="SearchViewModel.OrderDateStart" class="form-control">
+                    <label asp-for="SearchViewModel.OrderDateStart"></label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="SearchViewModel.OrderDateEnd" class="form-control">
+                    <label asp-for="SearchViewModel.OrderDateEnd"></label>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div class="col-md-8">
+            <div class="alert alert-success">
+                <span>
+                    A total of @Model.TotalCount records have been found.
+                </span>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>OrderId</th>
+                        <th>Customer full name</th>
+                        <th>Order Date</th>
+                        <th>Gender</th>
+                        <th>Category</th>
+                        <th>Taxful Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var viewModel in Model.List)
+                    {
+                        <tr>
+                            <td>@viewModel.OrderId</td>
+                            <td>@viewModel.CustomerFullName</td>
+                            <td>@viewModel.OrderDate</td>
+                            <td>@viewModel.Gender</td>
+                            <td>@viewModel.Category</td>
+                            <td>@viewModel.TaxfulTotalPrice</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

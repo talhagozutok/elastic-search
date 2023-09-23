@@ -9,6 +9,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<BlogService>();
 builder.Services.AddScoped<BlogRepository>();
+builder.Services.AddScoped<ECommerceService>();
+builder.Services.AddScoped<ECommerceRepository>();
 builder.Services.AddElasticClient(builder.Configuration);
 
 var app = builder.Build();

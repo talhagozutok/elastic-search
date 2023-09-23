@@ -23,6 +23,12 @@ public class ECommerceRepository
     {
         List<Action<QueryDescriptor<ECommerce>>> queryDescriptors = new();
 
+        if (searchViewModel is null)
+        {
+            queryDescriptors.Add(q => q.MatchAll());
+            return await PaginateResult(page, pageSize, queryDescriptors);
+        }
+
         if (!string.IsNullOrEmpty(searchViewModel.Category))
         {
             Action<QueryDescriptor<ECommerce>> query = q => q
@@ -66,15 +72,32 @@ public class ECommerceRepository
         if (!string.IsNullOrEmpty(searchViewModel.Gender))
         {
             Action<QueryDescriptor<ECommerce>> query = q => q
-                .Term(e => e.Gender, searchViewModel.Gender);
+                .Term(t => t.Field(f => f.Gender)
+                    .Value(searchViewModel.Gender)
+                    .CaseInsensitive());
+
+            queryDescriptors.Add(query);
         }
 
+        if (!queryDescriptors.Any())
+        {
+            queryDescriptors.Add(q => q.MatchAll());
+        }
+
+        return await PaginateResult(page, pageSize, queryDescriptors);
+    }
+
+    private async Task<(List<ECommerce> list, long count)> PaginateResult(
+        int page,
+        int pageSize,
+        List<Action<QueryDescriptor<ECommerce>>> queryDescriptors)
+    {
         var result = await _elasticClient.SearchAsync<ECommerce>(s => s
-            .Index(IndexName)
-            .Size(pageSize).From((page - 1) * pageSize)
-            .Query(q => q
-                .Bool(b => b
-                    .Must(queryDescriptors.ToArray()))));
+                    .Index(IndexName)
+                    .Size(pageSize).From((page - 1) * pageSize)
+                    .Query(q => q
+                        .Bool(b => b
+                            .Must(queryDescriptors.ToArray()))));
 
         foreach (var hit in result.Hits)
         {
